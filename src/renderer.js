@@ -1,4 +1,10 @@
 const clipboardList = document.querySelector("#clipboard-list");
+const searchInput = document.querySelector("#search-input");
+const clearButton = document.querySelector("#clear-button");
+
+let searchQuery = "";
+
+
 
 const history = [];
 let lastClipboardText = "";
@@ -24,17 +30,33 @@ function addClipboardEntry(text){
 function renderHistory(){
     clipboardList.innerHTML = "";
 
-    if (history.length === 0){
+    const filteredHistory = history.filter((entry) => 
+        entry.text.toLowerCase().includes(searchQuery)
+    );
+
+    const hasSearchQuery = searchQuery.length > 0;
+
+    if (filteredHistory.length === 0){
         clipboardList.innerHTML = `
             <div class="empty-state">
-                <h2>No clipboard history yet</h2>
-                <p>Copy some text to create your first entry.</p>
+                <h2>
+                    ${hasSearchQuery
+                        ? "No matching entries"
+                        : "No clipboard history yet"}
+                </h2>
+
+                <p>
+                    ${hasSearchQuery
+                        ? "Try searching for something else."
+                        : "Copy some text to create your first entry."}
+                </p>
             </div>
         `;
+
         return;
     }
 
-    for (const entry of history){
+    for (const entry of filteredHistory){
         const card = document.createElement("article");
         card.className = "clipboard-entry";
 
@@ -81,6 +103,20 @@ async function checkClipboard() {
         console.error("Could not read clipboard:", error);
     }
 }
+
+searchInput.addEventListener("input", () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    renderHistory();
+});
+
+clearButton.addEventListener("click", () => {
+    history.length = 0;
+    lastClipboardText = "";
+    searchQuery = "";
+    searchInput.value = "";
+
+    renderHistory();
+});
 
 renderHistory();
 checkClipboard();

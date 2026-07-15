@@ -11,7 +11,7 @@
 </head>
 <body>
     <main class="app">
-        <header class="header">
+        <header class="app-header">
             <div>
                 <h1>ClipFlow</h1>
                 <p class="subtitle">
@@ -19,6 +19,24 @@
                 </p>
             </div>
         </header>
+
+        <section class="toolbar" aria-label="Clipboard controls">
+            <label class="search-field">
+                <span class="sr-only">Search clipboard history</span>
+
+                <input
+                    id="search-input"
+                    type="search"
+                    placeholder="Search clipboard history..."
+                >
+            </label>
+
+            <button
+                id="clear-button"
+                class="clear-button"
+                type="button"
+            >Clear History</button>
+        </section>
 
         <section
         id="clipboard-list"
