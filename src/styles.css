@@ -12,4 +12,119 @@
 
     --success: #6F7F52; 
     --error: #A65353;
+
+    font-family: 
+    "Avenir Next",
+    "Segoe UI",
+    sans-serif;
+
+    color: var(--text);
+    background: var(--bg);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app {
+    width: min(760px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 48px 0;
+}
+
+.app-header {
+    margin-bottom: 32px;
+}
+
+
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1;
+}
+
+.subtitle {
+    margin: 14px 0 0;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.clipboard-list {
+    display: grid;
+    gap: 14px;
+}
+
+.clipboard-entry {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface) 65%, white);
+    box-shadow: 0 8px 24px rgb(43 37 35 / 8%);
+}
+
+.clipboard-content {
+    margin: 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    line-height: 1.55;
+}
+
+.clipboard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.clipboard-footer small {
+    color: var(--text-muted);
+}
+
+.clipboard-footer button {
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    background: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.clipboard-footer button:hover {
+    filter: brightness(1.08);
+}
+
+.clipboard-footer button:focus-visible {
+    outline: 3px solid var(--surface-strong);
+    outline-offset: 3px;
+}
+
+.empty-state {
+    padding: 52px 24px;
+    border: 1px dashed var(--border);
+    border-radius: 20px;
+    text-align: center;
+    background: rgb(255 255 255 / 28%);
+}
+
+.empty-state h2 {
+    margin: 0 0 8px;
+}
+
+.empty-state p {
+    margin: 0;
+    color: var(--text-muted);
 }
