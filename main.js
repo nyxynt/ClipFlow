@@ -11,9 +11,9 @@ function createWindow(){
         width: 1000,
         height: 700,
         minWidth: 700,
-        minHeigth: 500,
+        minHeight: 500,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(__dirname, "preload.cjs"),
             contextIsolation: true,
             nodeIntegration: false
         }
@@ -21,6 +21,18 @@ function createWindow(){
 
     window.loadFile(path.join(__dirname, "src", "index.html"));
 }
+
+ipcMain.handle("clipboard:get", () => {
+    return clipboard.readText();
+});
+
+ipcMain.handle("clipboard:write", (_event, text) => {
+    if(typeof text !== "string"){
+        throw new TypeError("Clipboard must be a string.");
+    }
+
+    clipboard.writeText(text);
+});
 
 app.whenReady().then(() => {
     createWindow();
