@@ -134,7 +134,28 @@ function renderHistory(){
             }, 1000);
         });
 
-        footer.append(time, copyButton);
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete-button";
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener("click", async () => {
+            history = history.filter((item) => item.id !== entry.id);
+
+            if (entry.text === lastClipboardText){
+                lastClipboardText = await window.clipflow.getClipboardText();
+            }
+
+            await saveHistory();
+            renderHistory();
+        });
+
+        const actions = document.createElement("div");
+        actions.className = "clipboard-actions";
+
+        actions.append(copyButton, deleteButton);
+        footer.append(time, actions);
+
         card.append(content, footer);
         clipboardList.append(card);
     }

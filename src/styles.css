@@ -112,6 +112,23 @@ h1 {
     outline-offset: 3px;
 }
 
+.clipboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clipboard-footer .delete-button {
+    color: var(--error);
+    background: transparent;
+    border: 1px solid rgb(166 83 83 / 35%);
+}
+
+.clipboard-footer .delete-button:hover {
+    background: rgb(166 83 83 / 10%);
+    filter: none;
+}
+
 .empty-state {
     padding: 52px 24px;
     border: 1px dashed var(--border);
