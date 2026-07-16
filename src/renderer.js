@@ -111,7 +111,6 @@ searchInput.addEventListener("input", () => {
 
 clearButton.addEventListener("click", () => {
     history.length = 0;
-    lastClipboardText = "";
     searchQuery = "";
     searchInput.value = "";
 
