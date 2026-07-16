@@ -6,10 +6,10 @@ let searchQuery = "";
 
 
 
-const history = [];
+let history = [];
 let lastClipboardText = "";
 
-function addClipboardEntry(text){
+async function addClipboardEntry(text){
     const cleanedText = text.trim();
 
     if (!cleanedText || cleanedText === lastClipboardText){
@@ -18,14 +18,59 @@ function addClipboardEntry(text){
 
     lastClipboardText = cleanedText;
 
-    history.unshift({
-        id: crypto.randomUUID(),
-        text: cleanedText,
-        copiedAt: new Date()
+    const existingIndex = history.findIndex(
+        (entry) => entry.text === cleanedText
+    );
+
+    if (existingIndex !== -1){
+        const [existingEntry] = history.splice(existingIndex, 1);
+
+        history.unshift({
+            ...existingEntry,
+            copiedAt: new Date()
+        });
+    }else {
+        history.unshift({
+            id: crypto.randomUUID(),
+            text: cleanedText,
+            copiedAt: new Date()
     });
+}
+
+
+
+
+    await saveHistory();
+    renderHistory();
+}
+
+
+async function saveHistory() {
+    const serializableHistory = history.map((entry) => ({
+        ...entry,
+        copiedAt: entry.copiedAt.toISOString()
+    }));
+
+    await window.clipflow.saveHistory(serializableHistory);
+}
+
+async function loadHistory() {
+    const savedHistory = await window.clipflow.loadHistory();
+
+    history = Array.isArray(savedHistory)
+        ? savedHistory.map((entry) => ({
+            ...entry,
+            copiedAt: new Date(entry.copiedAt)
+        }))
+        : [];
+
+    lastClipboardText = history.length > 0
+        ? history[0].text
+        : "";
 
     renderHistory();
 }
+
 
 function renderHistory(){
     clipboardList.innerHTML = "";
@@ -98,7 +143,7 @@ function renderHistory(){
 async function checkClipboard() {
     try {
         const text = await window.clipflow.getClipboardText();
-        addClipboardEntry(text);
+        await addClipboardEntry(text);
     }catch (error) {
         console.error("Could not read clipboard:", error);
     }
@@ -109,15 +154,27 @@ searchInput.addEventListener("input", () => {
     renderHistory();
 });
 
-clearButton.addEventListener("click", () => {
-    history.length = 0;
+clearButton.addEventListener("click", async () => {
+    history = [];
     searchQuery = "";
     searchInput.value = "";
 
+
+    await saveHistory();
     renderHistory();
 });
 
-renderHistory();
-checkClipboard();
-setInterval(checkClipboard, 750);
+
+async function init() {
+    try {
+        await loadHistory();
+        await checkClipboard();
+
+        setInterval(checkClipboard, 750);
+    } catch (error) {
+        console.error("Could not initialize ClipFlow:", error);
+    }
+}
+
+init();
 

@@ -135,3 +135,58 @@ h1 {
     gap: 12px;
     margin: 24px 0;
 }
+
+.search-field {
+    flex: 1;
+}
+
+.search-field input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    background: rgb(255 255 255 / 45%);
+    outline: none;
+}
+
+.search-field input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(121 92 95 / 15%);
+}
+
+.clear-button {
+    padding: 14px 18px;
+    border: 0;
+    border-radius: 14px;
+    color: white;
+    background: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.clear-button:hover {
+    filter: brightness(1.08);
+}
+
+.sr-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 600px){
+    .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
