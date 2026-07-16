@@ -1,7 +1,10 @@
 const clipboardList = document.querySelector("#clipboard-list");
 const searchInput = document.querySelector("#search-input");
 const clearButton = document.querySelector("#clear-button");
+const pauseButton = document.querySelector("#pause-button");
 
+
+let isPaused = false;
 let searchQuery = "";
 
 
@@ -33,13 +36,10 @@ async function addClipboardEntry(text){
         history.unshift({
             id: crypto.randomUUID(),
             text: cleanedText,
-            copiedAt: new Date()
+            copiedAt: new Date(),
+            pinned: false
     });
 }
-
-
-
-
     await saveHistory();
     renderHistory();
 }
@@ -60,6 +60,7 @@ async function loadHistory() {
     history = Array.isArray(savedHistory)
         ? savedHistory.map((entry) => ({
             ...entry,
+            pinned: entry.pinned ?? false,
             copiedAt: new Date(entry.copiedAt)
         }))
         : [];
@@ -75,9 +76,17 @@ async function loadHistory() {
 function renderHistory(){
     clipboardList.innerHTML = "";
 
-    const filteredHistory = history.filter((entry) => 
-        entry.text.toLowerCase().includes(searchQuery)
-    );
+    const filteredHistory = history
+        .filter((entry) =>
+            entry.text.toLowerCase().includes(searchQuery)
+    )
+    .sort((a, b) => {
+        if (a.pinned !== b.pinned){
+            return Number(b.pinned) - Number(a.pinned);
+        }
+
+        return b.copiedAt.getTime() - a.copiedAt.getTime();
+    });
 
     const hasSearchQuery = searchQuery.length > 0;
 
@@ -104,6 +113,10 @@ function renderHistory(){
     for (const entry of filteredHistory){
         const card = document.createElement("article");
         card.className = "clipboard-entry";
+
+        if (entry.pinned){
+            card.classList.add("is-pinned");
+        }
 
         const content = document.createElement("p");
         content.className = "clipboard-content";
@@ -134,6 +147,25 @@ function renderHistory(){
             }, 1000);
         });
 
+
+        const pinButton = document.createElement("button");
+        pinButton.type = "button";
+        pinButton.className = "pin-button";
+        pinButton.textContent = entry.pinned ? "Unpin" : "Pin";
+        pinButton.setAttribute(
+            "aria-label",
+            entry.pinned
+                ? "Unpin clipboard entry"
+                : "Pin clipboard entry"
+        );
+
+        pinButton.addEventListener("click", async () => {
+            entry.pinned = !entry.pinned;
+
+            await saveHistory();
+            renderHistory();
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.type = "button";
         deleteButton.className = "delete-button";
@@ -153,7 +185,7 @@ function renderHistory(){
         const actions = document.createElement("div");
         actions.className = "clipboard-actions";
 
-        actions.append(copyButton, deleteButton);
+        actions.append(pinButton, copyButton, deleteButton);
         footer.append(time, actions);
 
         card.append(content, footer);
@@ -162,6 +194,11 @@ function renderHistory(){
 }
 
 async function checkClipboard() {
+    
+    if (isPaused){
+        return;
+    }
+
     try {
         const text = await window.clipflow.getClipboardText();
         await addClipboardEntry(text);
@@ -176,13 +213,40 @@ searchInput.addEventListener("input", () => {
 });
 
 clearButton.addEventListener("click", async () => {
-    history = [];
+    history = history.filter((entry) => entry.pinned);
+
+
     searchQuery = "";
     searchInput.value = "";
 
 
     await saveHistory();
     renderHistory();
+});
+
+pauseButton.addEventListener("click", async () => {
+    isPaused = !isPaused;
+
+    if (!isPaused){
+        const currentClipboard = 
+            await window.clipflow.getClipboardText();
+
+        lastClipboardText = currentClipboard.trim();
+    }
+
+    pauseButton.textContent = isPaused
+        ? "Resume"
+        : "Pause";
+
+    pauseButton.setAttribute(
+        "aria-pressed",
+        String(isPaused)
+    );
+
+    pauseButton.classList.toggle(
+        "is-paused",
+        isPaused
+    );
 });
 
 
