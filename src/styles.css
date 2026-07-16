@@ -103,6 +103,31 @@ h1 {
     cursor: pointer;
 }
 
+
+.clipboard-footer .pin-button {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: rgb(255 255 255 / 55%);
+}
+
+.clipboard-footer .pin-button:hover {
+    background: rgb(255 255 255 / 80%);
+    filter: none;
+}
+
+.clipboard-footer .pin-button.is-active {
+    color: white;
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.clipboard-footer .pin-button.is-active:hover {
+    background: var(--accent);
+    filter: brightness(1.08);
+}
+
 .clipboard-footer button:hover {
     filter: brightness(1.08);
 }
@@ -212,6 +237,20 @@ h1 {
 
 .clear-button:hover {
     filter: brightness(1.08);
+}
+
+.pause-button {
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    background: rgb(255 255 255 / 40%);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pin-button:hover {
+    background: rgb(255 255 255 / 65%);
 }
 
 .sr-only{

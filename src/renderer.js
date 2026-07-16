@@ -152,6 +152,7 @@ function renderHistory(){
         pinButton.type = "button";
         pinButton.className = "pin-button";
         pinButton.textContent = entry.pinned ? "Unpin" : "Pin";
+        pinButton.classList.toggle("is-active", entry.pinned);
         pinButton.setAttribute(
             "aria-label",
             entry.pinned
