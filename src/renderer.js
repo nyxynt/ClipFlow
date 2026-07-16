@@ -165,6 +165,26 @@ clearButton.addEventListener("click", async () => {
 });
 
 
+document.addEventListener("keydown", (event) => {
+    const isSearchShortcut =
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k";
+
+    if (isSearchShortcut){
+        event.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+    }
+
+    if (event.key === "Escape" && document.activeElement === searchInput){
+        searchInput.value = "";
+        searchQuery = "";
+        searchInput.blur();
+        renderHistory();
+    }
+});
+
+
 async function init() {
     try {
         await loadHistory();
