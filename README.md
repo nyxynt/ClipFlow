@@ -1,8 +1,6 @@
 # ClipFlow
 
-
-Short and quick video show case -> 
-<video controls src="https://qu.ax/x/SjaYs.mp4" title="Video Showcase"></video>
+https://qu.ax/x/SjaYs.mp4 (Quick showcase of ClipFlow)
 
 ClipFlow is a lightweight desktop clipboard history manager built with Electron.
 
